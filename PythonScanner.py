@@ -2,6 +2,7 @@ import nmap
 from fpdf import FPDF
 from datetime import datetime
 import ipaddress
+import argparse
 
 # Function to scan the specified network
 def scan_network(network):
@@ -56,7 +57,12 @@ def create_pdf_report(hosts, start_time, end_time, host_range, broadcast_address
     pdf.output("network_scan_report.pdf")
 
 if __name__ == "__main__":
-    network = "192.168.1.0/24"  # Specify the target network to scan
-    hosts, start_time, end_time = scan_network(network)
-    host_range, broadcast_address = calculate_network_info(network)
+    # Parse command-line arguments
+    parser = argparse.ArgumentParser(description="Network Scanner")
+    parser.add_argument("network", help="Target network to scan (e.g., 192.168.1.0/24)")
+    args = parser.parse_args()
+
+    # Call the functions with the input network from the command line
+    hosts, start_time, end_time = scan_network(args.network)
+    host_range, broadcast_address = calculate_network_info(args.network)
     create_pdf_report(hosts, start_time, end_time, host_range, broadcast_address)
